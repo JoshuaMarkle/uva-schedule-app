@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:puppeteer/puppeteer.dart' as puppeteer;
 import 'package:intl/intl.dart';
+import 'cards.dart';
 
 class LibraryPage extends StatefulWidget {
   const LibraryPage({super.key});
@@ -56,6 +57,7 @@ class _LibraryPageState extends State<LibraryPage> {
       libraryList.add({
         'library': library['library'],
         'status': status,
+        'hours': library['hours']
       });
     }
 
@@ -132,7 +134,7 @@ class _LibraryPageState extends State<LibraryPage> {
               itemCount: snapshot.data!.length,
               itemBuilder: (context, index) {
                 var library = snapshot.data![index];
-                return buildLibraryCard(library['library']!, library['status']!); // Generate a card for each library
+                return buildCard(library['library']!, library['status']!, library['hours']!);
               },
             );
           }

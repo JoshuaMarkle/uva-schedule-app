@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:puppeteer/puppeteer.dart' as puppeteer;
+import 'cards.dart';
 
 class FoodPage extends StatefulWidget {
   const FoodPage({super.key});
@@ -34,14 +35,16 @@ class _FoodPageState extends State<FoodPage> {
       const locations = Array.from(document.querySelectorAll('#listLocations li')).map(location => {
           const locationName = location.querySelector('.location-card-header__display-name')?.textContent?.trim();
           const status = location.querySelector('.location-card-status > div > span')?.textContent?.trim();
+          const timeFrame = location.querySelector('.location-card-status > :nth-child(2) > span')?.textContent?.trim() || '';
           if (locationName && status) {
               return {
                   'location': locationName,
-                  'status': status
+                  'status': status,
+                  'timeframe': timeFrame
               };
           }
       }).filter(item => item !== undefined); // Filter out any undefined entries
-      return locations;
+      return locations;    
     }''');
 
     await browser.close(); // Close the browser
@@ -52,48 +55,11 @@ class _FoodPageState extends State<FoodPage> {
       diningHallsList.add({
         'location': hall['location'],
         'status': hall['status'],
+        'timeframe': hall['timeframe'],
       });
     }
 
     return diningHallsList;
-  }
-
-  // Widget to create a card for each dining hall
-  Widget buildDiningCard(String location, String status) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(5),
-        boxShadow:[
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.3), //color of shadow
-            spreadRadius: 2, //spread radius
-            blurRadius: 4, // blur radius
-            offset: Offset(0, 2), // changes position of shadow
-          ),
-        ],
-      ),
-      margin: EdgeInsets.all(5),
-      child: Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              location,
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            Text(
-              '$status',
-              style: TextStyle(
-                fontSize: 16,
-                color: status.toLowerCase() == 'open' ? Colors.green : Colors.red,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
   }
 
   @override
@@ -118,7 +84,7 @@ class _FoodPageState extends State<FoodPage> {
               itemCount: snapshot.data!.length,
               itemBuilder: (context, index) {
                 var diningHall = snapshot.data![index];
-                return buildDiningCard(diningHall['location']!, diningHall['status']!); // Generate a card for each dining hall
+                return buildCard(diningHall['location']!, diningHall['status']!, diningHall['timeframe']!); // Generate a card for each dining hall
               },
             );
           }

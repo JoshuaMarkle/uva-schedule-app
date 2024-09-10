@@ -1,26 +1,52 @@
 import 'package:flutter/material.dart';
 
-// A reusable card widget that displays the name and status
-class ReusableCardList extends StatelessWidget {
-  final List<Map<String, String>> items;
-
-  ReusableCardList({required this.items});
-
-  @override
-  Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: items.length,
-      itemBuilder: (context, index) {
-        return Card(
-          margin: EdgeInsets.all(8),
-          elevation: 3,
-          child: ListTile(
-            title: Text(items[index]['name'] ?? 'Unknown Name'),
-            subtitle: Text(items[index]['status'] ?? 'Unknown Status'),
-            trailing: Icon(Icons.arrow_forward),
+// Widget to create a card for each dining hall
+Widget buildCard(String location, String status, String timeFrame) {
+  return Container(
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(5),
+      boxShadow:[
+        BoxShadow(
+          color: Colors.grey.withOpacity(0.3), //color of shadow
+          spreadRadius: 2, //spread radius
+          blurRadius: 4, // blur radius
+          offset: Offset(0, 2), // changes position of shadow
+        ),
+      ],
+    ),
+    margin: EdgeInsets.all(5),
+    child: Padding(
+      padding: const EdgeInsets.all(10.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            location,
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
-        );
-      },
-    );
-  }
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                '$status',
+                style: TextStyle(
+                  fontSize: 16,
+                  color: status.toLowerCase() == 'open' ? Colors.green : Colors.red,
+                ),
+              ),
+              Text(
+                '$timeFrame',
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.grey,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    ),
+  );
 }
+
